@@ -1,5 +1,5 @@
 #include <stdio.h>
-
+#include "tui.h"
 int main(){
-  printf("%s %d\n", "This is a string, this is a number: ", 5);
+	hello_world();
 }
