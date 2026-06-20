@@ -44,7 +44,7 @@ char** allocateTerminalMatrix(int width, int height){
 }
 
 /* Like createLine but modifies an existing row of a matrix */
-int setLine(char** matrix, int row, int left, int right, char c) {
+int setLine(char** matrix, int row, int left, int right, char fill, char empty) {
 	int length = strlen(matrix[row]);
 	if (left > right) {
 		perror("Invalid 'left'/'right' parameters!");
@@ -54,22 +54,22 @@ int setLine(char** matrix, int row, int left, int right, char c) {
 		return 1;
 	}
 	for (int idx = 0; idx < left; idx++) {
-		matrix[row][idx] = ' ';
+		matrix[row][idx] = empty;
 	}
 	for (int idx = left - 1; idx < right; idx++) {
-		matrix[row][idx] = c;
+		matrix[row][idx] = fill;
 	}
 	for (int idx = right; idx < length; idx++) {
-		matrix[row][idx] = ' ';
+		matrix[row][idx] = empty;
 	}
 	return 0;
 }
 
 /* Should set every elem of the provided matrix to 'c' */
-int setMatrix(char** matrix, int width, int height, char c) {
+int setMatrix(char** matrix, int width, int height, char fill, char empty) {
 	// debug: line setting
   for (int i = 0; i < height; i++) {
- 		setLine(matrix, i, 0, width, c);
+ 		setLine(matrix, i, 0, width, fill, empty);
   }
 	return 0;
 }
@@ -119,7 +119,7 @@ int hello_world() {
 
   char** terminalMatrix = allocateTerminalMatrix(maxX, maxY);
 
-  setMatrix(terminalMatrix, maxX, maxY, 'Y');
+  setMatrix(terminalMatrix, maxX, maxY, 'Y', '.');
   // debug: terminal update via matrix
   updateTerminal(terminalMatrix, maxX, maxY);
 
