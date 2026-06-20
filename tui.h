@@ -10,6 +10,7 @@ char* createLine(int length, int left, int right, char c);
 int setLine(char** matrix, int row, int left, int right, char c);
 /* Returns a pointer to a heap-allocated matrix that spans the entire terminal */
 char** allocateTerminalMatrix(int width, int height);
-
+/* Sets all elems of the matrix to 'c' */
+int setMatrix(char** matrix, int width, int height, char c);
 /* Debugging function */
 int hello_world();

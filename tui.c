@@ -67,8 +67,10 @@ int setLine(char** matrix, int row, int left, int right, char c) {
 
 /* Should set every elem of the provided matrix to 'c' */
 int setMatrix(char** matrix, int width, int height, char c) {
-
-
+	// debug: line setting
+  for (int i = 0; i < height; i++) {
+ 		setLine(matrix, i, 0, width, c);
+  }
 	return 0;
 }
 
@@ -103,8 +105,6 @@ int initTerminal(int fg_color, int bg_color) {
 int killTerminal() {
 
 	attroff(COLOR_PAIR(1));
-
-  char control = getch();
   //printf("Control key is: %c\n", control);
   endwin();
 	return 0;
@@ -119,10 +119,7 @@ int hello_world() {
 
   char** terminalMatrix = allocateTerminalMatrix(maxX, maxY);
 
-  // debug: line setting
-  for (int i = 0; i < maxY; i++) {
- 		setLine(terminalMatrix, i, 0, maxX, '@');
-  }
+  setMatrix(terminalMatrix, maxX, maxY, 'Y');
   // debug: terminal update via matrix
   updateTerminal(terminalMatrix, maxX, maxY);
 

@@ -1,4 +1,5 @@
 #include <ncurses.h>
+#include <stdlib.h>
 #include "tui.h"
 #include "simulation.h"
 
@@ -17,6 +18,14 @@ int main() {
   char** terminalMatrix = allocateTerminalMatrix(maxX, maxY);
 
 
+  setMatrix(terminalMatrix, maxX, maxY, 'y');
 
+  updateTerminal(terminalMatrix, maxX, maxY);
+  // Blocking call
+  getch();
+
+  // Termination procedure
+  killTerminal();
+  free(terminalMatrix);
 	return 0;
 }
