@@ -65,6 +65,17 @@ int setLine(char** matrix, int row, int left, int right, char c) {
 	return 0;
 }
 
+/* Assumes terminal Matrix is not out of bounds vertically */
+int updateTerminal(char** terminalMatrix, int maxX, int maxY) {
+	for (int i = 0; i < maxY; i++){
+ 		//setLine(terminalMatrix, i, i+1, maxX -i, 'k');
+  	mvprintw(i, 0, "%s", terminalMatrix[i]);
+  }
+  refresh();
+	return 0;
+}
+
+
 int hello_world() {
   initscr();
   noecho();
@@ -88,14 +99,13 @@ int hello_world() {
   maxX = getmaxx(stdscr);
   maxY = getmaxy(stdscr);
   //fprintf(stderr, "MaxX: %d MaxY: %d", maxX, maxY);
-  char** terminal = allocateTerminalMatrix(maxX, maxY);
+  char** terminalMatrix = allocateTerminalMatrix(maxX, maxY);
 
   // test line setting and freeing performance
-  for (int i = 0; i < maxY; i++){
- 		setLine(terminal, i, i+1, maxX -i, 'k');
-   	fprintf(stderr, "Terminal row length (width) is: %d, right is: %d", strlen(terminal[i]), maxX);
-  	mvprintw(i, 0, "%s", terminal[i]);
+  for (int i = 0; i < maxY; i++) {
+ 		setLine(terminalMatrix, i, 0, maxX, 'T');
   }
+  updateTerminal(terminalMatrix, maxX, maxY);
   refresh();
 
   attroff(COLOR_PAIR(1));
@@ -103,7 +113,7 @@ int hello_world() {
   getch();
 
   endwin();
-  free(terminal);
+  free(terminalMatrix);
   //printf("MaxX is: %d, line length is: %d\n", maxX, strlen(testString));
   return 0;
 }
