@@ -38,11 +38,12 @@ char** allocateTerminalMatrix(int width, int height){
 			matrix[i][j] = ' ';
 		}
 		matrix[i][width] = '\0';
-		fprintf(stderr, "Row length is: %d", strlen(matrix[i]));
+		// fprintf(stderr, "Row length is: %d", strlen(matrix[i]));
 	}
 	return matrix;
 }
 
+/* Like createLine but modifies an existing row of a matrix */
 int setLine(char** matrix, int row, int left, int right, char c) {
 	int length = strlen(matrix[row]);
 	if (left > right) {
@@ -52,7 +53,6 @@ int setLine(char** matrix, int row, int left, int right, char c) {
 		perror("'right' is larger than row length");
 		return 1;
 	}
-	// + 1 for '\0'
 	for (int idx = 0; idx < left; idx++) {
 		matrix[row][idx] = ' ';
 	}
@@ -62,6 +62,13 @@ int setLine(char** matrix, int row, int left, int right, char c) {
 	for (int idx = right; idx < length; idx++) {
 		matrix[row][idx] = ' ';
 	}
+	return 0;
+}
+
+/* Should set every elem of the provided matrix to 'c' */
+int setMatrix(char** matrix, int width, int height, char c) {
+
+
 	return 0;
 }
 
@@ -75,45 +82,52 @@ int updateTerminal(char** terminalMatrix, int maxX, int maxY) {
 	return 0;
 }
 
-
-int hello_world() {
-  initscr();
+int initTerminal(int fg_color, int bg_color) {
+	initscr();
   noecho();
-  // cbreak();
-  // keypad(stdscr, true);
-  curs_set(0); // cursor appearance
+  cbreak(); // disables line buffering
+  curs_set(0); // invisible cursor
 
   if (has_colors() == false) {
       endwin();
       printf("Your terminal doesn't support colours.\n");
       return 1;
   }
-
+  // color handling
   start_color();
-  //fg & bg colors
-  init_pair(1, COLOR_WHITE, COLOR_BLUE);
-
+  init_pair(1, fg_color, bg_color);
   attron(COLOR_PAIR(1));
+  return 0;
+}
+
+int killTerminal() {
+
+	attroff(COLOR_PAIR(1));
+
+  char control = getch();
+  //printf("Control key is: %c\n", control);
+  endwin();
+	return 0;
+}
+
+int hello_world() {
+	initTerminal(COLOR_MAGENTA, COLOR_BLACK);
 
   int maxX = 0, maxY = 0;
   maxX = getmaxx(stdscr);
   maxY = getmaxy(stdscr);
-  //fprintf(stderr, "MaxX: %d MaxY: %d", maxX, maxY);
+
   char** terminalMatrix = allocateTerminalMatrix(maxX, maxY);
 
-  // test line setting and freeing performance
+  // debug: line setting
   for (int i = 0; i < maxY; i++) {
- 		setLine(terminalMatrix, i, 0, maxX, 'T');
+ 		setLine(terminalMatrix, i, 0, maxX, '@');
   }
+  // debug: terminal update via matrix
   updateTerminal(terminalMatrix, maxX, maxY);
-  refresh();
 
-  attroff(COLOR_PAIR(1));
-
-  getch();
-
-  endwin();
+  // ncurses cleanup function
+  killTerminal();
   free(terminalMatrix);
-  //printf("MaxX is: %d, line length is: %d\n", maxX, strlen(testString));
   return 0;
 }
