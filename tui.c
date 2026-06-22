@@ -33,7 +33,7 @@ char* createLine(int length, int left, int right, char c) {
 char** allocateTerminalMatrix(int width, int height){
 	char** matrix = (char**) calloc(height, sizeof(char*));
 	for (int i = 0; i < height; i++) {
-		matrix[i] = (char*) calloc(width, sizeof(char));
+		matrix[i] = (char*) calloc(width + 1, sizeof(char));
 		for (int j = 0; j < width; j++) {
 			matrix[i][j] = ' ';
 		}
@@ -89,6 +89,7 @@ int initTerminal(int fg_color, int bg_color) {
   noecho();
   cbreak(); // disables line buffering
   curs_set(0); // invisible cursor
+  nodelay(stdscr, TRUE);
 
   if (has_colors() == false) {
       endwin();
