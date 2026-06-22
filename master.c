@@ -87,14 +87,22 @@ int updateStateAndSpeed(int8_t *state, float *speed,
   return 0;
 }
 
-int getInitialStateFromFile(int32_t maxX, int32_t maxY, char** matrix, char* filename, char solid, char empty) {
-  FILE* f = fopen(filename, "r");
-  if (!f) return 1;
+int getInitialStateFromFile(int32_t maxX, int32_t maxY, char **matrix,
+                            char *filename, char solid, char empty) {
+  FILE *f = fopen(filename, "r");
+  if (!f)
+    return 1;
 
   int32_t patW, patH;
-  if (fscanf(f, "%d %d\n", &patW, &patH) != 2) { fclose(f); return 1; }
+  if (fscanf(f, "%d %d\n", &patW, &patH) != 2) {
+    fclose(f);
+    return 1;
+  }
 
-  if (patW > maxX || patH > maxY) { fclose(f); return 2; }
+  if (patW > maxX || patH > maxY) {
+    fclose(f);
+    return 2;
+  }
 
   setMatrix(matrix, maxX, maxY, empty, empty);
 
@@ -102,7 +110,8 @@ int getInitialStateFromFile(int32_t maxX, int32_t maxY, char** matrix, char* fil
   char line[patW + 2];
 
   for (int row = 0; row < patH && row < maxY; row++) {
-    if (!fgets(line, sizeof(line), f)) break;
+    if (!fgets(line, sizeof(line), f))
+      break;
     for (int col = 0; col < patW && colOffset + col < maxX; col++) {
       matrix[row][colOffset + col] = (line[col] == '1') ? solid : empty;
     }
@@ -112,7 +121,7 @@ int getInitialStateFromFile(int32_t maxX, int32_t maxY, char** matrix, char* fil
   return 0;
 }
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   int32_t maxX = 0, maxY = 0;
   float speed = 1; // speed is in FPS/TPS
   int8_t state = STATE_PAUSED;
@@ -129,13 +138,15 @@ int main(int argc, char** argv) {
   updateStepDuration(speed, &stepDuration);
 
   /* SET INITIAL SIMULATION STATE */
-  char* filename = argc > 1 ? argv[1] : "state_default.txt";
-  int loadResult = getInitialStateFromFile(maxX, maxY, terminalMatrix, filename, SOLID, EMPTY);
+  char *filename = argc > 1 ? argv[1] : "state_default.txt";
+  int loadResult = getInitialStateFromFile(maxX, maxY, terminalMatrix, filename,
+                                           SOLID, EMPTY);
   if (loadResult != 0) {
     killTerminal();
     free(terminalMatrix);
     if (loadResult == 2)
-      printf("Error: '%s' is too large for the current terminal (%dx%d)\n", filename, maxX, maxY);
+      printf("Error: '%s' is too large for the current terminal (%dx%d)\n",
+             filename, maxX, maxY);
     else
       printf("Error: could not open state file '%s'\n", filename);
     return 1;
@@ -149,8 +160,8 @@ int main(int argc, char** argv) {
     updateStateAndSpeed(&state, &speed, &stepDuration, &input);
     input = ' ';
     if (state == STATE_PLAYING) {
-        matrixFallStep(terminalMatrix, maxX, maxY, SOLID);
-        updateTerminal(terminalMatrix, maxX, maxY);
+      matrixFallStep(terminalMatrix, maxX, maxY, SOLID);
+      updateTerminal(terminalMatrix, maxX, maxY);
     }
     sleepUntilNextTick(&prevTime, &stepDuration);
   }
