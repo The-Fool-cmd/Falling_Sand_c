@@ -12,13 +12,10 @@
  * Simulation handled by simulation.c
  */
 
-#define INPUT_FILENAME "state.txt"
 #define EMPTY '.'
 #define SOLID '@'
 #define QUIT 'q'
-#define STEP 's'
 #define PAUSE 'p'
-#define RESET 'r'
 #define FASTER '.'
 #define SLOWER ','
 #define STATE_PAUSED 0
@@ -26,11 +23,6 @@
 #define STATE_QUIT 2
 
 void updateTime(struct timespec *time) { clock_gettime(CLOCK_MONOTONIC, time); }
-
-int64_t currentNsecs(struct timespec time) {
-  updateTime(&time);
-  return time.tv_sec * 1e9 + time.tv_nsec;
-}
 
 int sleepUntilNextTick(struct timespec *prevTime,
                        struct timespec *stepDuration) {
@@ -53,8 +45,6 @@ int sleepUntilNextTick(struct timespec *prevTime,
   updateTime(prevTime);
   return 0;
 }
-
-int getMatrixStateFromFile(char **matrix, FILE file) { return 0; }
 
 void updateStepDuration(float speed, struct timespec *stepDuration) {
   float interval = 1.0f / speed;
@@ -167,6 +157,8 @@ int main(int argc, char **argv) {
   }
   // Termination procedure
   killTerminal();
+  for (int i = 0; i < maxY; i++)
+    free(terminalMatrix[i]);
   free(terminalMatrix);
   return 0;
 }
