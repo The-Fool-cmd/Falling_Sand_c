@@ -17,11 +17,15 @@ int matrixFallStep(char** matrix, int width, int height, char solid) {
 				// down
 				if (matrix[row + 1][col] != solid) {
 					swap(&matrix[row+1][col], &matrix[row][col]);
+				// must randomise left/right condition checking
 				// left
-				} else if (col != 0 && matrix[row+1][col-1] != solid){
+				} else if (col != 0
+					&& matrix[row+1][col-1] != solid) {
 					swap(&matrix[row+1][col-1], &matrix[row][col]);
 				// right
-				} else if (col != width - 1 && matrix[row+1][col+1] != solid) {
+				} else if (col != width - 1
+					&& matrix[row+1][col+1] != solid
+					&& matrix[row][col+1] != solid) {
 					swap(&matrix[row+1][col+1], &matrix[row][col]);
 				}
 			}
@@ -66,9 +70,7 @@ int advMatrixFallStep(char** matrix, int width, int height, char solid) {
 				}
 			}
 		}
-
 	}
-
 	return 0;
 }
 

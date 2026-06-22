@@ -29,8 +29,8 @@ int main() {
   setLine(terminalMatrix, 2, 15, maxX-15, SOLID, EMPTY);
   setLine(terminalMatrix, 4, 15, maxX-15, SOLID, EMPTY);
   */
-  for (int i = 0; i < 6; i++) {
-  	setLine(terminalMatrix, i, 12, maxX-12, SOLID, EMPTY);
+  for (int i = 0; i < 2 * maxY / 3; i++) {
+  	setLine(terminalMatrix, i, maxX/4, 3 * maxX / 4, SOLID, EMPTY);
   }
 
 
